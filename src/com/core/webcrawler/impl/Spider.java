@@ -28,21 +28,14 @@ public class Spider {
     * 
     * @param url
     *           - The starting point of the spider
-    * @param searchWord
-    *           - The word or string that you are searching for
     */
    public void search(String url) {
+      this.pagesToVisit.add(url);
       while (this.pagesVisited.size() < MAX_PAGES_TO_SEARCH) {
-         String currentUrl;
+         String currentUrl = this.nextUrl();
          SpiderHelper processor = new SpiderHelper(container);
-         if (this.pagesToVisit.isEmpty()) {
-            currentUrl = url;
-            this.pagesVisited.add(url);
-         } else {
-            currentUrl = this.nextUrl();
-         }
          processor.crawl(currentUrl);
-
+         this.pagesVisited.add(currentUrl);
          this.pagesToVisit.addAll(processor.getLinks());
       }
       System.out.println("\n**Done** Visited " + this.pagesVisited.size()
@@ -61,7 +54,6 @@ public class Spider {
       do {
          nextUrl = this.pagesToVisit.remove(0);
       } while (this.pagesVisited.contains(nextUrl));
-      this.pagesVisited.add(nextUrl);
       return nextUrl;
    }
 }
