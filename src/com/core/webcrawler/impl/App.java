@@ -7,8 +7,12 @@ public class App {
     * @param args
     */
    public static void main(String[] args) {
-      Spider spider = new Spider();
-      spider.search("https://www.sportal.bg/");//:D
-      spider.getTextCrawled();
+      Spider sportSpider = new Spider();
+      sportSpider.search("https://www.sportal.bg/");//:D
+      sportSpider.getTextCrawled();
+
+      Spider scienceSpider = new Spider();
+      scienceSpider.search("http://www.iflscience.com/");
+      scienceSpider.getTextCrawled();
    }
 }
