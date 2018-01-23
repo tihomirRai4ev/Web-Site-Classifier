@@ -11,12 +11,15 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.misc.HighFreqTerms;
+import org.apache.lucene.misc.TermStats;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 
 import java.io.BufferedReader;
@@ -51,15 +54,12 @@ public class App {
 
    private static Analyzer createDefaultAnalyzer() {
       Map<String, Analyzer> analyzerMap = new HashMap<>();
-      // TODO Add analyzer for contents field
       analyzerMap.put(CONTENTS_FIELD, new StandardAnalyzer());
 
-      // TODO Add default analyzer
       return new PerFieldAnalyzerWrapper(new StandardAnalyzer(), analyzerMap);
    }
 
    private static Document createDocument(File f) {
-      // TODO Create a document with fields (field type)
       // FULLPATH_FIELD (string), FILENAME_FIELD (string), CONTENTS_FIELD (text)
 
       Document doc = new Document();
@@ -88,7 +88,7 @@ public class App {
                .filter(Objects::nonNull)
                .forEach(doc -> {
                   System.out.println(doc.get(FULLPATH_FIELD));
-                  // TODO add document to the store though the IndexWriter object
+                  // TODO add document to the store through the IndexWriter object
                   try {
                      w.addDocument(doc);
                   } catch (IOException e) {
@@ -153,15 +153,19 @@ public class App {
 
    public static void main(String[] args) throws IOException, ParseException {
       Directory index = new RAMDirectory();
-      String path = App.class.getResource("/20news-18828").getPath().substring(1);
-      String queryString = args.length > 0 ? String.join(" ", args) : "Hello World";
-
+      String path = "X:\\Dropbox\\source-code\\java\\projects\\Web-Site-Classifier\\";
       Analyzer analyzer = createDefaultAnalyzer();
-
       loadData(index, path, analyzer);
 
-      Query q = buildQuery(queryString, analyzer);
-
-      search(index, q, true);
+      try {
+         IndexWriter writer = new IndexWriter(FSDirectory.open(new File(".").toPath()), new IndexWriterConfig(analyzer));
+         IndexReader reader = DirectoryReader.open(writer,true, true);
+         TermStats[] commonTerms = HighFreqTerms.getHighFreqTerms(reader, 30, null, new HighFreqTerms.DocFreqComparator());
+         for (TermStats commonTerm : commonTerms) {
+            System.out.println(commonTerm.termtext.utf8ToString());
+         }
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
    }
 }
