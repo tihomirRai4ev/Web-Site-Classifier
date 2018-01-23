@@ -30,7 +30,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -151,14 +153,15 @@ public class App {
       }
    }
 
-   public static void main(String[] args) throws IOException, ParseException {
+   public static void main(String[] args) throws IOException {
       Directory index = new RAMDirectory();
-      String path = "X:\\Dropbox\\source-code\\java\\projects\\Web-Site-Classifier\\";
+      String articlesPath = "D:\\git\\personal\\Web-Site-Classifier\\articles";
       Analyzer analyzer = createDefaultAnalyzer();
-      loadData(index, path, analyzer);
+      loadData(index, articlesPath, analyzer);
 
       try {
-         IndexWriter writer = new IndexWriter(FSDirectory.open(new File(".").toPath()), new IndexWriterConfig(analyzer));
+         IndexWriter writer =
+               new IndexWriter(FSDirectory.open(new File(articlesPath).toPath()), new IndexWriterConfig(analyzer));
          IndexReader reader = DirectoryReader.open(writer,true, true);
          TermStats[] commonTerms = HighFreqTerms.getHighFreqTerms(reader, 30, null, new HighFreqTerms.DocFreqComparator());
          for (TermStats commonTerm : commonTerms) {
@@ -166,6 +169,72 @@ public class App {
          }
       } catch (Exception e) {
          e.printStackTrace();
+      }
+      HashMap<String, IndexContainerImpl> forBayesRaychev = new HashMap<>();
+      String[] topics = new String[] {"sport", "science"};
+      for (String topic : topics) {
+         IndexContainerImpl indexContainer = new IndexContainerImpl(new ArrayList<>());
+         try {
+            LuceneInvertedIndex idx = new LuceneInvertedIndex();
+            idx.indexFile(new File("articles/" + topic + ".txt"));
+            for (Map.Entry<String, List<LuceneInvertedIndex.Tuple>> a : idx.index.entrySet()) {
+               indexContainer.add(new StrictTokenAnalyzerImpl(a.getKey(), a.getValue().size()));
+            }
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
+
+         indexContainer.sort();
+         indexContainer.print();
+
+         forBayesRaychev.put(topic, indexContainer);
+      }
+
+      tishoBayesa(forBayesRaychev);
+   }
+
+   private static void tishoBayesa(HashMap<String, IndexContainerImpl> forBayesRaychev) {
+      // tisho writes heregit s
+   }
+}
+
+class StrictTokenAnalyzerImpl extends Object {
+   public String word;
+   public int occurance;
+
+   public StrictTokenAnalyzerImpl(String word, int occurrence) {
+      this.word = word;
+      this.occurance = occurrence;
+   }
+}
+
+class IndexContainerImpl extends Object {
+   public ArrayList<StrictTokenAnalyzerImpl> strictTokenAnalyzerImpls;
+
+   public IndexContainerImpl(ArrayList<StrictTokenAnalyzerImpl> strictTokenAnalyzerImpls) {
+      this.strictTokenAnalyzerImpls = strictTokenAnalyzerImpls;
+   }
+
+   public void add(StrictTokenAnalyzerImpl strictTokenAnalyzerImpl) {
+      strictTokenAnalyzerImpls.add(strictTokenAnalyzerImpl);
+   }
+
+   public void sort() {
+      strictTokenAnalyzerImpls.sort((o1, o2) -> {
+         if (o1.occurance < o2.occurance)
+            return 1;
+         else if (o1.occurance > o2.occurance)
+            return -1;
+         else
+            return 0;
+      });
+   }
+
+   public void print() {
+      for (StrictTokenAnalyzerImpl strictTokenAnalyzerImpl : strictTokenAnalyzerImpls) {
+         System.out.println(
+               "The word \"" + strictTokenAnalyzerImpl.word + "\" is found " + strictTokenAnalyzerImpl.occurance
+                     + " times");
       }
    }
 }
