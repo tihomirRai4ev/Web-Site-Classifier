@@ -1,5 +1,19 @@
 package com.core.dataanalyzer;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -22,25 +36,9 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import com.datumbox.opensource.classifiers.NaiveBayes;
+import com.datumbox.opensource.dataobjects.NaiveBayesKnowledgeBase;
 
-/*
- * This is a simple demo created specially for Information Retrieval course held at FMI.
- * In order to complete the current exercise, please, first read http://www.lucenetutorial.com/lucene-in-5-minutes.html
- * Detailed presentation from Chris Manning and Pandu Nayak can be found here: https://goo.gl/R9F78j
- */
 
 public class App {
    private static final String FULLPATH_FIELD = "fullpath";
@@ -48,7 +46,8 @@ public class App {
    private static final String CONTENTS_FIELD = "contents";
    private static final int HITS_LIMIT = 10;
 
-   private static IndexWriter createIndex(Directory index, Analyzer analyzer) throws IOException {
+   private static IndexWriter createIndex(Directory index, Analyzer analyzer)
+         throws IOException {
       IndexWriterConfig config = new IndexWriterConfig(analyzer);
 
       return new IndexWriter(index, config);
@@ -68,7 +67,8 @@ public class App {
       try {
          FileReader fileReader = new FileReader(f);
          BufferedReader bufferedReader = new BufferedReader(fileReader);
-         doc.add(new StringField(FULLPATH_FIELD, f.getAbsolutePath(), Field.Store.YES));
+         doc.add(new StringField(FULLPATH_FIELD, f.getAbsolutePath(),
+               Field.Store.YES));
          doc.add(new StringField(FILENAME_FIELD, f.getName(), Field.Store.YES));
          doc.add(new TextField(CONTENTS_FIELD, new FileReader(f)));
       } catch (FileNotFoundException e) {
@@ -80,7 +80,8 @@ public class App {
       return doc;
    }
 
-   private static void loadData(Directory index, String path, Analyzer analyzer) throws IOException {
+   private static void loadData(Directory index, String path, Analyzer analyzer)
+         throws IOException {
       try (IndexWriter w = createIndex(index, analyzer)) {
          Files.walk(Paths.get(path))
                .parallel()
@@ -102,12 +103,14 @@ public class App {
       }
    }
 
-   private static ScoreDoc[] getScoredDocs(Query q, int hitsLimit, IndexSearcher searcher) throws IOException {
+   private static ScoreDoc[] getScoredDocs(Query q, int hitsLimit,
+         IndexSearcher searcher) throws IOException {
       // TODO get top documents and extract ScoreDocs[] from them
       return searcher.search(q, hitsLimit).scoreDocs;
    }
 
-   private static Query buildQuery(String querystr, Analyzer analyzer) throws ParseException {
+   private static Query buildQuery(String querystr, Analyzer analyzer)
+         throws ParseException {
       // TODO construct query object based on CONTENTS_FIELD
       return new QueryParser(CONTENTS_FIELD, analyzer).parse(querystr);
    }
@@ -120,7 +123,8 @@ public class App {
       return searcher;
    }
 
-   private static void search(Directory index, Query q, boolean verbose) throws IOException {
+   private static void search(Directory index, Query q, boolean verbose)
+         throws IOException {
       // 3. search
 
       // reader can only be closed when there
@@ -140,14 +144,16 @@ public class App {
 
             Document d = searcher.doc(docId);
 
-            String output = String.format("%d.\t%d\t%f\t%s", (i + 1), docId, score, d.get(FULLPATH_FIELD));
+            String output = String.format("%d.\t%d\t%f\t%s", (i + 1), docId,
+                  score, d.get(FULLPATH_FIELD));
 
             System.out.println(output);
             if (verbose) {
                System.out.println("\nExplanation of hit score calculation: ");
                System.out.println(searcher.explain(q, docId));
             }
-            System.out.println("----------------------------------------------------------------");
+            System.out.println(
+                  "----------------------------------------------------------------");
          }
 
       }
@@ -155,15 +161,18 @@ public class App {
 
    public static void main(String[] args) throws IOException {
       Directory index = new RAMDirectory();
-      String articlesPath = "D:\\git\\personal\\Web-Site-Classifier\\articles";
+      String articlesPath =
+            "C:\\Users\\traychev\\Documents\\workspace-sts-3.8.3.RELEASE\\TopicClassifierDataMining\\articles";
       Analyzer analyzer = createDefaultAnalyzer();
       loadData(index, articlesPath, analyzer);
 
       try {
          IndexWriter writer =
-               new IndexWriter(FSDirectory.open(new File(articlesPath).toPath()), new IndexWriterConfig(analyzer));
-         IndexReader reader = DirectoryReader.open(writer,true, true);
-         TermStats[] commonTerms = HighFreqTerms.getHighFreqTerms(reader, 30, null, new HighFreqTerms.DocFreqComparator());
+               new IndexWriter(FSDirectory.open(new File(articlesPath)
+                     .toPath()), new IndexWriterConfig(analyzer));
+         IndexReader reader = DirectoryReader.open(writer, true, true);
+         TermStats[] commonTerms = HighFreqTerms.getHighFreqTerms(reader, 30,
+               null, new HighFreqTerms.DocFreqComparator());
          for (TermStats commonTerm : commonTerms) {
             System.out.println(commonTerm.termtext.utf8ToString());
          }
@@ -171,14 +180,17 @@ public class App {
          e.printStackTrace();
       }
       HashMap<String, IndexContainerImpl> forBayesRaychev = new HashMap<>();
-      String[] topics = new String[] {"sport", "science"};
+      String[] topics = new String[] { "sport", "science" };
       for (String topic : topics) {
-         IndexContainerImpl indexContainer = new IndexContainerImpl(new ArrayList<>());
+         IndexContainerImpl indexContainer = new IndexContainerImpl(
+               new ArrayList<>());
          try {
             LuceneInvertedIndex idx = new LuceneInvertedIndex();
             idx.indexFile(new File("articles/" + topic + ".txt"));
-            for (Map.Entry<String, List<LuceneInvertedIndex.Tuple>> a : idx.index.entrySet()) {
-               indexContainer.add(new StrictTokenAnalyzerImpl(a.getKey(), a.getValue().size()));
+            for (Map.Entry<String, List<LuceneInvertedIndex.Tuple>> a : idx.index
+                  .entrySet()) {
+               indexContainer.add(new StrictTokenAnalyzerImpl(a.getKey(), a
+                     .getValue().size()));
             }
          } catch (Exception e) {
             e.printStackTrace();
@@ -190,11 +202,31 @@ public class App {
          forBayesRaychev.put(topic, indexContainer);
       }
 
-      tishoBayesa(forBayesRaychev);
+      classifier(forBayesRaychev);
    }
 
-   private static void tishoBayesa(HashMap<String, IndexContainerImpl> forBayesRaychev) {
-      // tisho writes heregit s
+   private static void classifier(
+         HashMap<String, IndexContainerImpl> forBayesRaychev) {
+
+      NaiveBayes algorithmMasterpiece = new NaiveBayes();
+      Map<String, String[]> tokens = new HashMap<String, String[]>();
+      for (Map.Entry<String, IndexContainerImpl> entry : forBayesRaychev
+            .entrySet()) {
+         String[] words = new String[entry
+               .getValue().strictTokenAnalyzerImpls.size()];
+         int i = 0;
+         for (StrictTokenAnalyzerImpl token : entry
+               .getValue().strictTokenAnalyzerImpls) {
+            words[i++] = token.word;
+         }
+         tokens.put(entry.getKey(), words);
+      }
+      algorithmMasterpiece.setChisquareCriticalValue(6.63);
+      algorithmMasterpiece.train(tokens);
+      NaiveBayesKnowledgeBase knowledgeBase = algorithmMasterpiece
+            .getKnowledgeBase();
+      int i = 1;
+
    }
 }
 
@@ -211,7 +243,8 @@ class StrictTokenAnalyzerImpl extends Object {
 class IndexContainerImpl extends Object {
    public ArrayList<StrictTokenAnalyzerImpl> strictTokenAnalyzerImpls;
 
-   public IndexContainerImpl(ArrayList<StrictTokenAnalyzerImpl> strictTokenAnalyzerImpls) {
+   public IndexContainerImpl(
+         ArrayList<StrictTokenAnalyzerImpl> strictTokenAnalyzerImpls) {
       this.strictTokenAnalyzerImpls = strictTokenAnalyzerImpls;
    }
 
@@ -233,7 +266,8 @@ class IndexContainerImpl extends Object {
    public void print() {
       for (StrictTokenAnalyzerImpl strictTokenAnalyzerImpl : strictTokenAnalyzerImpls) {
          System.out.println(
-               "The word \"" + strictTokenAnalyzerImpl.word + "\" is found " + strictTokenAnalyzerImpl.occurance
+               "The word \"" + strictTokenAnalyzerImpl.word + "\" is found "
+                     + strictTokenAnalyzerImpl.occurance
                      + " times");
       }
    }
