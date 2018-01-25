@@ -221,12 +221,20 @@ public class App {
          }
          tokens.put(entry.getKey(), words);
       }
-      algorithmMasterpiece.setChisquareCriticalValue(6.63);
-      algorithmMasterpiece.train(tokens);
+
+      Map<String, String[]> tokens2 = new HashMap();
+      for (Map.Entry<String, String[]> entry : tokens.entrySet()) {
+         tokens2.put(entry.getKey(), new String[] { String.join(" ", entry
+               .getValue()) });
+      }
+
+      algorithmMasterpiece.setChisquareCriticalValue(1.2);
+      algorithmMasterpiece.train(tokens2);
       NaiveBayesKnowledgeBase knowledgeBase = algorithmMasterpiece
             .getKnowledgeBase();
-      int i = 1;
-
+      NaiveBayes algorithmMasterpiece2 = new NaiveBayes(knowledgeBase);
+      String topic = algorithmMasterpiece2.predict("NASCAR FANTASY SOCCER ATHLETICS TENNIS GOLF MMA");
+      System.out.println("PREDICTION: " + topic);
    }
 }
 
