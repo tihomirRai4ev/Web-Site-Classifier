@@ -41,16 +41,16 @@ public class SpiderHelper {
          container.add(url, htmlDocument.body().text());
          //TODO: need to have re-try logic if connection is not OK (200).
          if (connection.response().statusCode() == 200) {
-            System.out.println("\n**Visiting** Received web page at " + url);
+//            System.out.println("\n**Visiting** Received web page at " + url);
          }
          // Not sure if we need this below:
          if (!connection.response().contentType().contains("text/html")) {
-            System.out.println(
-                  "**Failure** Retrieved something other than HTML");
+//            System.out.println(
+//                  "**Failure** Retrieved something other than HTML");
             return false;
          }
          Elements linksOnPage = htmlDocument.select("a[href]");
-         System.out.println("Found (" + linksOnPage.size() + ") links");
+//         System.out.println("Found (" + linksOnPage.size() + ") links");
          for (Element link : linksOnPage) {
             this.links.add(link.absUrl("href"));
          }

@@ -18,7 +18,11 @@ public class Spider {
    }
 
    public String getTextCrawled() {
-      return container.getAll();
+      return container.getAllText();
+   }
+
+   public Set<String> getUrlsCrawled() {
+      return container.getAllUrls();
    }
 
    /**
@@ -30,29 +34,20 @@ public class Spider {
     *           - The starting point of the spider
     */
    public void search(String url) {
-      this.pagesToVisit.add(url);
-      while (this.pagesVisited.size() < MAX_PAGES_TO_SEARCH) {
-         String currentUrl = this.nextUrl();
-         SpiderHelper processor = new SpiderHelper(container);
-         processor.crawl(currentUrl);
-         this.pagesVisited.add(currentUrl);
-         this.pagesToVisit.addAll(processor.getLinks());
-      }
-      System.out.println("\n**Done** Visited " + this.pagesVisited.size()
-            + " web page(s)");
+      search(url, MAX_PAGES_TO_SEARCH);
    }
 
-   public void search(String url, int crowlDeepness) {
+   public void search(String url, int crawlDeepness) {
       this.pagesToVisit.add(url);
-      while (this.pagesVisited.size() < crowlDeepness) {
+      while (this.pagesVisited.size() < crawlDeepness) {
          String currentUrl = this.nextUrl();
          SpiderHelper processor = new SpiderHelper(container);
          processor.crawl(currentUrl);
          this.pagesVisited.add(currentUrl);
          this.pagesToVisit.addAll(processor.getLinks());
       }
-      System.out.println("\n**Done** Visited " + this.pagesVisited.size()
-            + " web page(s)");
+//      System.out.println("\n**Done** Visited " + this.pagesVisited.size()
+//            + " web page(s)");
    }
 
    /**

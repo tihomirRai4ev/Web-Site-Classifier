@@ -2,6 +2,7 @@ package com.core.containers.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class HtmlContainer {
    private Map<String, String> urlToTextBodyContainer;
@@ -18,7 +19,7 @@ public class HtmlContainer {
       return urlToTextBodyContainer.get(url);
    }
 
-   public String getAll() { //per website?
+   public String getAllText() { //per website?
       StringBuilder helper = new StringBuilder();
       for (String urlText : urlToTextBodyContainer.values()) {
          helper.append(urlText).append(
@@ -27,5 +28,9 @@ public class HtmlContainer {
                      * appended??*/
       }
       return helper.toString();
+   }
+
+   public Set<String> getAllUrls() {
+      return urlToTextBodyContainer.keySet();
    }
 }

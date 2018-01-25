@@ -52,5 +52,10 @@
 			<artifactId>lucene-misc</artifactId>
 			<version>7.2.1</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+    </dependencies>
 </project>
