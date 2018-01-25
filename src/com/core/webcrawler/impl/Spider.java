@@ -42,6 +42,19 @@ public class Spider {
             + " web page(s)");
    }
 
+   public void search(String url, int crowlDeepness) {
+      this.pagesToVisit.add(url);
+      while (this.pagesVisited.size() < crowlDeepness) {
+         String currentUrl = this.nextUrl();
+         SpiderHelper processor = new SpiderHelper(container);
+         processor.crawl(currentUrl);
+         this.pagesVisited.add(currentUrl);
+         this.pagesToVisit.addAll(processor.getLinks());
+      }
+      System.out.println("\n**Done** Visited " + this.pagesVisited.size()
+            + " web page(s)");
+   }
+
    /**
     * Returns the next URL to visit (in the order that they were found). We also
     * do a check to make

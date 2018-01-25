@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,6 +37,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 
+import com.core.webcrawler.impl.Spider;
 import com.datumbox.opensource.classifiers.NaiveBayes;
 import com.datumbox.opensource.dataobjects.NaiveBayesKnowledgeBase;
 
@@ -44,6 +46,7 @@ public class App {
    private static final String FULLPATH_FIELD = "fullpath";
    private static final String FILENAME_FIELD = "filename";
    private static final String CONTENTS_FIELD = "contents";
+   static Spider testSpider;
    private static final int HITS_LIMIT = 10;
 
    private static IndexWriter createIndex(Directory index, Analyzer analyzer)
@@ -221,7 +224,25 @@ public class App {
          }
          tokens.put(entry.getKey(), words);
       }
+      try {
+         Spider sportSpider = new Spider();
+         sportSpider.search("http://www.sportingnews.com/");
+         sportSpider.getTextCrawled();
+         FileWriter fileWriter = new FileWriter("articles/sport.txt");
+         fileWriter.write(sportSpider.getTextCrawled());
 
+         Spider scienceSpider = new Spider();
+         scienceSpider.search("http://www.iflscience.com/");
+         System.out.println(sportSpider.getTextCrawled());
+         fileWriter = new FileWriter("articles/science.txt");
+         fileWriter.write(scienceSpider.getTextCrawled());
+
+         testSpider = new Spider();
+         testSpider.search(
+               "http://fantasygames.nascar.com/articles/2018-daytona-500-in-76-days", 1);
+      } catch (Throwable e) {
+         //?
+      }
       Map<String, String[]> tokens2 = new HashMap();
       for (Map.Entry<String, String[]> entry : tokens.entrySet()) {
          tokens2.put(entry.getKey(), new String[] { String.join(" ", entry
@@ -233,7 +254,8 @@ public class App {
       NaiveBayesKnowledgeBase knowledgeBase = algorithmMasterpiece
             .getKnowledgeBase();
       NaiveBayes algorithmMasterpiece2 = new NaiveBayes(knowledgeBase);
-      String topic = algorithmMasterpiece2.predict("NASCAR FANTASY SOCCER ATHLETICS TENNIS GOLF MMA");
+      String articleToPredict = testSpider.getTextCrawled();
+      String topic = algorithmMasterpiece2.predict(articleToPredict);
       System.out.println("PREDICTION: " + topic);
    }
 }
