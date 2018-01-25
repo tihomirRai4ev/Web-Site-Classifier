@@ -1,4 +1,4 @@
-package com.core.dataanalyzer;
+package com.core.dataanalyzer.lucene;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class LuceneInvertedIndex {
-   Map<String, List<Tuple>> index = new HashMap<String, List<Tuple>>();
-   List<String> files = new ArrayList<String>();
+public class InvertedIndex {
+   public Map<String, List<Tuple>> index = new HashMap<String, List<Tuple>>();
+   public List<String> files = new ArrayList<String>();
 
    public void indexFile(File file) throws IOException {
       int fileNumber = files.indexOf(file.getPath());
@@ -62,7 +62,7 @@ public class LuceneInvertedIndex {
       }
    }
 
-   class Tuple {
+   public class Tuple {
       public int fileno;
       public int position;
 
