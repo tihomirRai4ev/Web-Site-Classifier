@@ -34,7 +34,7 @@ class IndexContainer {
          System.out.println(
                "The word \"" + tokenIndex.word + "\" is found "
                      + tokenIndex.occurrence
-                     + " times + \n");
+                     + " times");
       }
    }
 

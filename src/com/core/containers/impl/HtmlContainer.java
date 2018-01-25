@@ -4,11 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HtmlContainer {
-
    private Map<String, String> urlToTextBodyContainer;
 
    public HtmlContainer() {
-      urlToTextBodyContainer = new HashMap<String, String>();
+      urlToTextBodyContainer = new HashMap<>();
    }
 
    public void add(String url, String textBody) {
@@ -29,5 +28,4 @@ public class HtmlContainer {
       }
       return helper.toString();
    }
-
 }
