@@ -14,33 +14,37 @@ import java.util.List;
 import java.util.Map;
 
 public class App {
+   public static Topic[] topics = new Topic[] {
+         new Topic("sport", "http://www.sportingnews.com/"),
+         new Topic("science", "https://www.sciencenews.org/"),
+         new Topic("music", "https://www.npr.org/music/"),
+         new Topic("movies", "http://www.imdb.com"),
+         new Topic("economics", "http://www.bbc.com"),
+         new Topic("jobs", "http://www.indeed.com")
+   };
+
    public static void main(String[] args) throws IOException {
-      System.out.println("CLASSIFICATION: " + classifyArticle(
+      crawl(topics);
+      System.out.println("CLASSIFICATION: " + classifyArticle(topics,
             "http://www.imdb.com/title/tt4500922/?pf_rd_m=A2FGELUUNOQJNL&pf_rd_p=2750721702&pf_rd_r=1WJCFJF4JBPT696JX7BR&pf_rd_s=right-2&pf_rd_t=15061&pf_rd_i=homepage&ref_=hm_otw_t0",
-            true, true));
+            true));
    }
 
-   public static String classifyArticle(String article, boolean shouldCrawl, boolean print) {
+   public static void crawl(Topic[] topics) throws IOException {
+      for (Topic topic : topics) {
+         Spider spider = new Spider();
+         spider.search(topic.site);
+         spider.getTextCrawled();
+         FileWriter fileWriter = new FileWriter("articles/" + topic.name + ".txt");
+         fileWriter.write(spider.getTextCrawled());
+      }
+   }
+
+   public static String classifyArticle(Topic[] topics, String article, boolean print) {
       HashMap<String, String[]> indexStructure = new HashMap<>();
-      Topic[] topics = new Topic[] {
-            new Topic("sport", "http://www.sportingnews.com/"),
-            new Topic("science", "https://www.sciencenews.org/"),
-            new Topic("music", "https://www.npr.org/music/"),
-            new Topic("movies", "http://www.imdb.com"),
-            new Topic("economics", "http://www.bbc.com"),
-            new Topic("jobs", "http://www.indeed.com")
-      };
 
       try {
          for (Topic topic : topics) {
-            if (shouldCrawl) {
-               Spider spider = new Spider();
-               spider.search(topic.site);
-               spider.getTextCrawled();
-               FileWriter fileWriter = new FileWriter("articles/" + topic.name + ".txt");
-               fileWriter.write(spider.getTextCrawled());
-            }
-
             IndexContainer indexContainer = new IndexContainer(new ArrayList<>());
             InvertedIndex idx = new InvertedIndex();
             idx.indexFile(new File("articles/" + topic.name + ".txt"));

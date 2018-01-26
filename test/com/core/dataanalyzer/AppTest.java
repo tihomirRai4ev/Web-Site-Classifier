@@ -3,11 +3,13 @@ package com.core.dataanalyzer;
 import com.core.webcrawler.impl.Spider;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class AppTest {
-   public int calculateSuccessRate(boolean crawl) {
+   public int calculateSuccessRate() {
       int failedClassifications = 0;
       int allClassification = 0;
       Topic topics[] = new Topic[] {
@@ -16,15 +18,18 @@ public class AppTest {
             new Topic("sport", "http://www.sportingnews.com/"),
       };
 
-      for (
-            Topic topic : topics)
+      try {
+         App.crawl(App.topics);
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
 
-      {
+      for (Topic topic : topics) {
          Spider testingSpider = new Spider();
          testingSpider.search(topic.site);
 
          for (String articleUrl : testingSpider.getUrlsCrawled()) {
-            String classification = App.classifyArticle(articleUrl, crawl, false);
+            String classification = App.classifyArticle(topics, articleUrl, false);
             System.out.print("expected:<[" + topic.name + "]> \tactual:<[" + classification + "]>");
 
             try {
@@ -43,7 +48,7 @@ public class AppTest {
 
    @Test
    public void testSuccessfulClassificationMoreThan50Percent() {
-      int successRate = calculateSuccessRate(true);
+      int successRate = calculateSuccessRate();
       System.out.println("Success rate: " + successRate + "%");
       assertTrue("Success rate (" + successRate + ") is more than 50%", successRate > 50);
    }
@@ -53,7 +58,9 @@ public class AppTest {
       for (int i = 0; i < 30; ++i) {
          try {
             testSuccessfulClassificationMoreThan50Percent();
-            Thread.sleep(1000 * 25 * 60);
+            int sleepMinutes = 25;
+            System.out.println("Sleeping for " + sleepMinutes + " minutes...");
+            Thread.sleep(1000 * sleepMinutes * 60);
          } catch (Throwable t) {
             t.printStackTrace();
          }
