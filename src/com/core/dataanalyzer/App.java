@@ -1,8 +1,8 @@
 package com.core.dataanalyzer;
 
 import com.core.dataanalyzer.lucene.InvertedIndex;
+import com.core.naivebaiseclassifier.classifiers.NaiveBayes;
 import com.core.webcrawler.impl.Spider;
-import com.datumbox.opensource.classifiers.NaiveBayes;
 import com.datumbox.opensource.dataobjects.NaiveBayesKnowledgeBase;
 
 import java.io.File;

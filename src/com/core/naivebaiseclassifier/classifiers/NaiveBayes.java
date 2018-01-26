@@ -1,4 +1,4 @@
-package com.datumbox.opensource.classifiers;
+package com.core.naivebaiseclassifier.classifiers;
 
 import com.datumbox.opensource.dataobjects.Document;
 import com.datumbox.opensource.dataobjects.FeatureStats;

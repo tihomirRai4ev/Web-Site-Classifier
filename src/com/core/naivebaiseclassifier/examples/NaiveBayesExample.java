@@ -1,6 +1,6 @@
-package com.datumbox.opensource.examples;
+package com.core.naivebaiseclassifier.examples;
 
-import com.datumbox.opensource.classifiers.NaiveBayes;
+import com.core.naivebaiseclassifier.classifiers.NaiveBayes;
 import com.datumbox.opensource.dataobjects.NaiveBayesKnowledgeBase;
 import java.io.BufferedReader;
 import java.io.IOException;
