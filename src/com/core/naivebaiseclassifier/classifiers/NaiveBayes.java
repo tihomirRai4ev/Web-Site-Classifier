@@ -1,15 +1,16 @@
 package com.core.naivebaiseclassifier.classifiers;
 
-import com.datumbox.opensource.dataobjects.Document;
-import com.datumbox.opensource.dataobjects.FeatureStats;
-import com.datumbox.opensource.dataobjects.NaiveBayesKnowledgeBase;
-import com.datumbox.opensource.features.FeatureExtraction;
-import com.datumbox.opensource.features.TextTokenizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.core.naivebaiseclassifier.dataobjects.Document;
+import com.core.naivebaiseclassifier.dataobjects.FeatureStats;
+import com.core.naivebaiseclassifier.dataobjects.NaiveBayesKnowledgeBase;
+import com.core.naivebaiseclassifier.features.FeatureExtraction;
+import com.core.naivebaiseclassifier.features.TextTokenizer;
 
 public class NaiveBayes {
    private double chisquareCriticalValue = 10.83; //equivalent to pvalue 0.001. It is used by feature selection algorithm

@@ -1,10 +1,12 @@
-package com.datumbox.opensource.features;
+package com.core.naivebaiseclassifier.features;
 
-import com.datumbox.opensource.dataobjects.Document;
-import com.datumbox.opensource.dataobjects.FeatureStats;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.core.naivebaiseclassifier.dataobjects.Document;
+import com.core.naivebaiseclassifier.dataobjects.FeatureStats;
 
 /**
  * FeatureExtraction class which is used to generate the FeatureStats Object 

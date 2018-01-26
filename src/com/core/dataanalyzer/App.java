@@ -1,10 +1,5 @@
 package com.core.dataanalyzer;
 
-import com.core.dataanalyzer.lucene.InvertedIndex;
-import com.core.naivebaiseclassifier.classifiers.NaiveBayes;
-import com.core.webcrawler.impl.Spider;
-import com.datumbox.opensource.dataobjects.NaiveBayesKnowledgeBase;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,6 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.core.dataanalyzer.lucene.InvertedIndex;
+import com.core.naivebaiseclassifier.classifiers.NaiveBayes;
+import com.core.naivebaiseclassifier.dataobjects.NaiveBayesKnowledgeBase;
+import com.core.webcrawler.impl.Spider;
 
 public class App {
    public static Topic[] topics = new Topic[] {
@@ -26,7 +26,7 @@ public class App {
    public static void main(String[] args) throws IOException {
       crawl(topics);
       System.out.println("CLASSIFICATION: " + classifyArticle(topics,
-            "http://www.imdb.com/title/tt4500922/?pf_rd_m=A2FGELUUNOQJNL&pf_rd_p=2750721702&pf_rd_r=1WJCFJF4JBPT696JX7BR&pf_rd_s=right-2&pf_rd_t=15061&pf_rd_i=homepage&ref_=hm_otw_t0",
+            "https://www.nascar.com/news-media/2018/01/24/ryan-blaney-fires-back-kyle-busch-nascar-comments/",
             true));
    }
 
@@ -37,6 +37,7 @@ public class App {
          spider.getTextCrawled();
          FileWriter fileWriter = new FileWriter("articles/" + topic.name + ".txt");
          fileWriter.write(spider.getTextCrawled());
+         fileWriter.close();
       }
    }
 

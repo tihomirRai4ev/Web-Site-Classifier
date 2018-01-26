@@ -1,9 +1,10 @@
-package com.datumbox.opensource.features;
+package com.core.naivebaiseclassifier.features;
 
-import com.datumbox.opensource.dataobjects.Document;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import com.core.naivebaiseclassifier.dataobjects.Document;
 
 /**
  * TextTokenizer class used to tokenize the texts and store them as Document

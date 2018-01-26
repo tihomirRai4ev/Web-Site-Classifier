@@ -1,4 +1,4 @@
-package com.datumbox.opensource.dataobjects;
+package com.core.naivebaiseclassifier.dataobjects;
 
 import java.util.HashMap;
 import java.util.Map;
