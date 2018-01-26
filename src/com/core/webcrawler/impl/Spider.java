@@ -1,11 +1,11 @@
 package com.core.webcrawler.impl;
 
+import com.core.containers.impl.HtmlContainer;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import com.core.containers.impl.HtmlContainer;
 
 public class Spider {
    private static final int MAX_PAGES_TO_SEARCH = 10;
@@ -39,7 +39,7 @@ public class Spider {
 
    public void search(String url, int crawlDeepness) {
       this.pagesToVisit.add(url);
-      while (this.pagesVisited.size() < crawlDeepness) {
+      while (this.pagesVisited.size() < crawlDeepness && !this.pagesToVisit.isEmpty()) {
          String currentUrl = this.nextUrl();
          SpiderHelper processor = new SpiderHelper(container);
          processor.crawl(currentUrl);
@@ -58,10 +58,13 @@ public class Spider {
     * @return
     */
    private String nextUrl() {
-      String nextUrl;
+      String nextUrl = null;
       do {
-         nextUrl = this.pagesToVisit.remove(0);
+         if (!this.pagesToVisit.isEmpty()) {
+            nextUrl = this.pagesToVisit.remove(0);
+         }
       } while (this.pagesVisited.contains(nextUrl));
+
       return nextUrl;
    }
 }

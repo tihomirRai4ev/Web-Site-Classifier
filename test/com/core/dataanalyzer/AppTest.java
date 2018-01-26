@@ -58,7 +58,7 @@ public class AppTest {
       for (int i = 0; i < 30; ++i) {
          try {
             testSuccessfulClassificationMoreThan50Percent();
-            int sleepMinutes = 5;
+            int sleepMinutes = 3;
             System.out.println("Sleeping for " + sleepMinutes + " minutes...");
             Thread.sleep(1000 * sleepMinutes * 60);
          } catch (Throwable t) {
