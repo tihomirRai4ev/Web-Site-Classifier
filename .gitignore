@@ -2,3 +2,7 @@ target
 articles
 .idea
 *.iml
+.project
+.classpath
+bin
+
