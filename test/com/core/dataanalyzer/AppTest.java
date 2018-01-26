@@ -14,8 +14,8 @@ public class AppTest {
       int allClassification = 0;
       Topic topics[] = new Topic[] {
             new Topic("music", "http://www.music-news.com/"),
-            new Topic("science", "https://www.sciencenews.org/"),
-            new Topic("sport", "http://www.sportingnews.com/"),
+            new Topic("science", "https://www.sciencenewsforstudents.org/"),
+            new Topic("sport", "http://www.skysports.com/news-wire"),
       };
 
       try {

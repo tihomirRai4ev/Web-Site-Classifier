@@ -19,14 +19,14 @@ public class App {
          new Topic("science", "https://www.sciencenews.org/"),
          new Topic("music", "https://www.npr.org/music/"),
          new Topic("movies", "http://www.imdb.com"),
-         new Topic("economics", "http://www.bbc.com"),
+         new Topic("economics", "https://www.economist.com/"),
          new Topic("jobs", "http://www.indeed.com")
    };
 
    public static void main(String[] args) throws IOException {
       crawl(topics);
       System.out.println("CLASSIFICATION: " + classifyArticle(topics,
-            "https://www.nascar.com/news-media/2018/01/24/ryan-blaney-fires-back-kyle-busch-nascar-comments/",
+            "https://www.theguardian.com/small-business-network/2018/jan/25/rapha-founder-cycling-now-is-a-bit-dull-theres-all-this-doping-stuff",
             true));
    }
 

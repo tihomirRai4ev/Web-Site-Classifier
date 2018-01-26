@@ -46,8 +46,8 @@ public class Spider {
          this.pagesVisited.add(currentUrl);
          this.pagesToVisit.addAll(processor.getLinks());
       }
-//      System.out.println("\n**Done** Visited " + this.pagesVisited.size()
-//            + " web page(s)");
+      System.out.println("\n**Done** Visited " + this.pagesVisited.size()
+            + " web page(s)");
    }
 
    /**
