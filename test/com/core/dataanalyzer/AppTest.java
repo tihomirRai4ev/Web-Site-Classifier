@@ -29,7 +29,7 @@ public class AppTest {
          testingSpider.search(topic.site);
 
          for (String articleUrl : testingSpider.getUrlsCrawled()) {
-            String classification = App.classifyArticle(topics, articleUrl, false);
+            String classification = App.classifyArticle(App.topics, articleUrl, false);
             System.out.print("expected:<[" + topic.name + "]> \tactual:<[" + classification + "]>");
 
             try {
@@ -58,7 +58,7 @@ public class AppTest {
       for (int i = 0; i < 30; ++i) {
          try {
             testSuccessfulClassificationMoreThan50Percent();
-            int sleepMinutes = 25;
+            int sleepMinutes = 5;
             System.out.println("Sleeping for " + sleepMinutes + " minutes...");
             Thread.sleep(1000 * sleepMinutes * 60);
          } catch (Throwable t) {
